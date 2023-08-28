@@ -8,11 +8,13 @@ import org.example.project3.models.Book;
 import org.example.project3.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.awt.print.Pageable;
 import java.util.Optional;
 
 @Controller
@@ -28,8 +30,16 @@ public class BooksController {
 }
 
     @GetMapping()
-    public String index(Model model){
-    model.addAttribute("books",booksService.findAll());
+    public String index(Model model,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "count",required = false) Integer count,
+                        @RequestParam(value = "sortByYear", required = false) boolean sort){
+        if(page == null && count == null){
+            model.addAttribute("books",booksService.findAll(sort));
+        } else{
+            model.addAttribute("books", booksService.findAll(page,count,sort));
+        }
+
     return "books/index";
     }
 
@@ -94,6 +104,18 @@ public class BooksController {
     public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person person){
         booksService.assign(id,person);
         return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/search")
+    public String searchPage()
+    {
+        return "books/search";
+    }
+    @PostMapping("/search")
+    public String search(Model model,
+                         @RequestParam(value="bookName",required = false) String name){
+        model.addAttribute("booksList",booksService.findByNameStartingWith(name));
+        return "books/search";
     }
 }
 

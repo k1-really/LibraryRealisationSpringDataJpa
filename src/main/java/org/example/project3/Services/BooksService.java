@@ -5,12 +5,17 @@ import org.example.project3.models.Person;
 import org.example.project3.repositories.BooksRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.function.Consumer;
 
 
 @Service
@@ -24,8 +29,20 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-    public List<Book> findAll() {
+    public List<Book> findAll(boolean sort) {
+        if(sort){
+            return booksRepository.findAll(Sort.by("year"));
+        } else{
             return booksRepository.findAll();
+        }
+    }
+
+    public List<Book> findAll(int page,int count,boolean sort) {
+        if(sort){
+            return booksRepository.findAll(PageRequest.of(page,count,Sort.by("year"))).getContent();
+        } else{
+            return booksRepository.findAll(PageRequest.of(page,count)).getContent();
+        }
     }
 
 
@@ -42,10 +59,8 @@ public class BooksService {
     @Transactional
     public void update(int id, Book updatedBook) {
         Book bookToBeUpdated = booksRepository.findById(id).get();
-
-        // добавляем по сути новую книгу (которая не находится в Persistence context), поэтому нужен save()
         updatedBook.setId(id);
-        updatedBook.setOwner(bookToBeUpdated.getOwner()); // чтобы не терялась связь при обновлении
+        updatedBook.setOwner(bookToBeUpdated.getOwner());
 
         booksRepository.save(updatedBook);
     }
@@ -55,29 +70,33 @@ public class BooksService {
         booksRepository.deleteById(id);
     }
 
-    // Returns null if book has no owner
+
     public Person getBookOwner(int id) {
-        // Здесь Hibernate.initialize() не нужен, так как владелец (сторона One) загружается не лениво
         return booksRepository.findById(id).map(Book::getOwner).orElse(null);
     }
 
-    // Освбождает книгу (этот метод вызывается, когда человек возвращает книгу в библиотеку)
+
     @Transactional
     public void release(int id) {
         booksRepository.findById(id).ifPresent(
                 book -> {
                     book.setOwner(null);
+                    book.setTakenAt(null);
+                    book.setExpired(false);
                 });
     }
 
-    // Назначает книгу человеку (этот метод вызывается, когда человек забирает книгу из библиотеки)
     @Transactional
     public void assign(int id, Person selectedPerson) {
         booksRepository.findById(id).ifPresent(
                 book -> {
                     book.setOwner(selectedPerson);
-
+                    book.setTakenAt(new Date());
                 }
         );
+    }
+
+    public List<Book> findByNameStartingWith(String name){
+        return booksRepository.findByNameStartingWith(name);
     }
 }

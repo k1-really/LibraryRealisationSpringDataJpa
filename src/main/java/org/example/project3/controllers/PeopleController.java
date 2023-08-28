@@ -5,6 +5,7 @@ import org.example.project3.Services.BooksService;
 import org.example.project3.Services.PeopleService;
 import org.example.project3.models.Person;
 
+import org.example.project3.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class PeopleController {
 
     private PeopleService peopleService;
-
+    private PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PeopleService peopleService) {
+    public PeopleController(PeopleService peopleService,PersonValidator personValidator) {
         this.peopleService = peopleService;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
@@ -46,6 +48,7 @@ public class PeopleController {
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult)
     {
+        personValidator.validate(person, bindingResult);
         if(bindingResult.hasErrors()){
             return "people/new";
         }
@@ -74,6 +77,5 @@ public String edit(Model model, @PathVariable("id") int id){
         peopleService.delete(id);
         return "redirect:/people";
     }
-
 
 }

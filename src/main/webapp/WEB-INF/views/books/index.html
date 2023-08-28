@@ -5,6 +5,9 @@
   <title>All Books</title>
 </head>
 <body>
+<div>
+  <a href="/books/search">Find a book by it's name!</a>
+</div>
 <div th:each="book : ${books}">
   <a th:href ="@{/books/{id}(id = ${book.getId()})}"th:text="${book.getName() +', '+ book.getAuthor() +', ' + book.getYear()}"></a>
 
@@ -13,5 +16,6 @@
 </br>
 </hr>
 <a href="/books/new">Add New Book!</a>
+
 </body>
 </html>

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +43,7 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
-    public List<Book> getBooksByPersonId(int id){
+    public List<Book> getBooksByPersonId(int id) {
         Optional<Person> person = peopleRepository.findById(id);
 
         if (person.isPresent()) {
@@ -50,16 +52,52 @@ public class PeopleService {
             // не мешает всегда вызывать Hibernate.initialize()
             // (на случай, например, если код в дальнейшем поменяется и итерация по книгам удалится)
 
+            // Проверка просроченности книг
+            person.get().getBooks().forEach(book -> {
+                long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
+                // 864000000 милисекунд = 10 суток
+                if (diffInMillies > 864000000)
+                    book.setExpired(true); // книга просрочена
+            });
+
             return person.get().getBooks();
         }
         else {
-            return null;
+            return Collections.emptyList();
         }
-       /* return peopleRepository.getBooksByPersonId(id);*/
     }
-    /*public Optional<Person> findByPersonName(String name){
-        Person person = peopleRepository.findByPersonName(name);
-        Optional<Person> opt = Optional.ofNullable(person);
-        return opt;
+
+    /*public List<Book> getBooksByPersonId(int id){
+        Optional<Person> person = peopleRepository.findById(id);
+
+        if (person.isPresent()) {
+            Hibernate.initialize(person.get().getBooks());
+
+            *//*List<Book> list = person.get().getBooks();
+            for(Book book : list){
+                long diff = book.getTakenAt().getTime() - new Date().getTime();
+                if(diff > 864000000){
+                    book.setExpired(true);
+                }
+            }*//*
+
+            // Проверка просроченности книг
+            person.get().getBooks().forEach(book -> {
+                long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
+                // 864000000 милисекунд = 10 суток
+                if (diffInMillies > 864000000)
+                    book.setExpired(true); // книга просрочена
+            });
+
+            return person.get().getBooks();
+        }
+        else {
+            return Collections.emptyList();
+        }
     }*/
+
+    public Optional<Person> findByPersonName(String name){
+        Optional<Person> person = peopleRepository.findByName(name);
+        return person;
+    }
 }
