@@ -1,7 +1,7 @@
 package org.example.project3.util;
 
 
-import org.example.project3.Services.PeopleService;
+import org.example.project3.services.PeopleService;
 import org.example.project3.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

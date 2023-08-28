@@ -1,4 +1,4 @@
-package org.example.project3.Services;
+package org.example.project3.services;
 
 import org.example.project3.models.Book;
 import org.example.project3.models.Person;

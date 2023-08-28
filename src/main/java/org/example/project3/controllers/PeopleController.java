@@ -1,8 +1,7 @@
 package org.example.project3.controllers;
 
 import jakarta.validation.Valid;
-import org.example.project3.Services.BooksService;
-import org.example.project3.Services.PeopleService;
+import org.example.project3.services.PeopleService;
 import org.example.project3.models.Person;
 
 import org.example.project3.util.PersonValidator;

@@ -1,21 +1,16 @@
 package org.example.project3.controllers;
 
 import jakarta.validation.Valid;
-import org.example.project3.Services.BooksService;
-import org.example.project3.Services.PeopleService;
+import org.example.project3.services.BooksService;
+import org.example.project3.services.PeopleService;
 
 import org.example.project3.models.Book;
 import org.example.project3.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.awt.print.Pageable;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
