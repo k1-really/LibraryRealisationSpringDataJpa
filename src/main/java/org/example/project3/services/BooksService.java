@@ -42,7 +42,6 @@ public class BooksService {
         }
     }
 
-
     public Book findOne(int id) {
         Optional<Book> foundBook = booksRepository.findById(id);
         return foundBook.orElse(null);
@@ -71,7 +70,6 @@ public class BooksService {
     public Person getBookOwner(int id) {
         return booksRepository.findById(id).map(Book::getOwner).orElse(null);
     }
-
 
     @Transactional
     public void release(int id) {

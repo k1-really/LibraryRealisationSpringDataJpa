@@ -14,13 +14,16 @@ public class Person {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotEmpty(message = "Name should not be empty.")
     @Size(min=2,max = 30, message="Name supposed to be between 2 and 30 symbols.")
     @Column(name = "name")
     private String name;
+
     @Min(value = 0,message = "Age supposed to be positive value.")
     @Column(name = "age")
     private int age;
+
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Book> books;
 
@@ -30,6 +33,7 @@ public class Person {
         this.name = name;
         this.age = age;
     }
+
     public List<Book> getBooks() {
         return books;
     }
@@ -46,7 +50,6 @@ public class Person {
         this.age = age;
     }
 
-
     public int getId() {
         return id;
     }
@@ -62,14 +65,4 @@ public class Person {
     public void setName(String name) {
         this.name = name;
     }
-
-   /* @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", books=" + books +
-                '}';
-    }*/
 }

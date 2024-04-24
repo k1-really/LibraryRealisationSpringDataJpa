@@ -3,7 +3,6 @@ package org.example.project3.controllers;
 import jakarta.validation.Valid;
 import org.example.project3.services.BooksService;
 import org.example.project3.services.PeopleService;
-
 import org.example.project3.models.Book;
 import org.example.project3.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class BooksController {
     public BooksController(BooksService booksService,PeopleService peopleService) {
         this.booksService = booksService;
         this.peopleService = peopleService;
-}
+    }
 
     @GetMapping()
     public String index(Model model,
@@ -34,16 +33,13 @@ public class BooksController {
         } else{
             model.addAttribute("books", booksService.findAll(page,count,sort));
         }
-
-    return "books/index";
+        return "books/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
-        //Получим одну книгу по id
         model.addAttribute("book",booksService.findOne(id));
         Person owner = booksService.getBookOwner(id);
-
         if(owner!=null){
             model.addAttribute("owner",owner);
         } else{

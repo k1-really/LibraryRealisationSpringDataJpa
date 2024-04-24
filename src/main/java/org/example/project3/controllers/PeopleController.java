@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/people")
 public class PeopleController {
 
-    private PeopleService peopleService;
-    private PersonValidator personValidator;
+    private final PeopleService peopleService;
+    private final PersonValidator personValidator;
 
     @Autowired
     public PeopleController(PeopleService peopleService,PersonValidator personValidator) {
@@ -56,7 +56,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
-public String edit(Model model, @PathVariable("id") int id){
+    public String edit(Model model, @PathVariable("id") int id){
         model.addAttribute("person", peopleService.findOne(id));
         return "people/edit";
     }
@@ -76,5 +76,4 @@ public String edit(Model model, @PathVariable("id") int id){
         peopleService.delete(id);
         return "redirect:/people";
     }
-
 }

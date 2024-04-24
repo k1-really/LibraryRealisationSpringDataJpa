@@ -14,15 +14,17 @@ public class Book {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotEmpty(message = "Name should not be empty.")
     @Size(min=2,max = 30, message="Name supposed to be between 2 and 30 symbols.")
-
     @Column(name = "name")
     private String name;
+
     @NotEmpty(message = "Author should not be empty.")
     @Size(min=2,max = 30, message="Name supposed to be between 2 and 30 symbols.")
     @Column(name = "author")
     private String author;
+
     @Min(value = 0,message = "year supposed to be positive value.")
     @Column(name = "year")
     private int year;
@@ -35,10 +37,8 @@ public class Book {
     @Temporal(TemporalType.TIMESTAMP)
     private Date takenAt;
 
-
-
     @Transient
-    private boolean expired; // Hibernate не будет замечать этого поля, что нам и нужно. По-умолчанию false.
+    private boolean expired;
 
     public Person getOwner() {
         return owner;
@@ -47,8 +47,6 @@ public class Book {
     public void setOwner(Person owner) {
         this.owner = owner;
     }
-
-
 
     public Book() {
     }
@@ -105,14 +103,4 @@ public class Book {
     public void setExpired(boolean expired) {
         this.expired = expired;
     }
-
- /*   @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                '}';
-    }*/
 }
